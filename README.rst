@@ -17,6 +17,49 @@ It takes some time to get used to it, though!
 Usual games expect immediate keyboard presses and releases -- so you have to emulate that with your hands.
 It is thus better to make your hands only abruptly and not too much to the extremes.
 
+Installation on Windows
+=======================
+Download and unzip a version of the application from the `Releases`_.
+
+.. _Releases: https://github.com/mristin/el-volante-virtual/releases
+
+Simply run ``el-volante-virtual.exe``.
+
+Installation on Linux
+=====================
+The packaged release was too large to host on GitHub.
+You have to manually clone the code and install the dependencies.
+
+Clone the repository:
+
+.. code-block::
+
+    https://github.com/mristin/el-volante-virtual.git
+
+Change to it:
+
+.. code-block::
+
+    cd el-volante-virtual
+
+Create a virtual environment:
+
+.. code-block::
+
+    python3 -m venv venv
+
+Activate the virtual environment:
+
+.. code-block::
+
+    source venv/bin/activate
+
+Run the application:
+
+.. code-block::
+
+    el-volante-virtual
+
 ``--help``
 ==========
 .. Help starts: python3 elvolantevirtual/main.py --help
