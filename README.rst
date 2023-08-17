@@ -225,6 +225,12 @@ The commit messages follow the guidelines from from https://chris.beams.io/posts
 * Wrap the body at 72 characters
 * Use the body to explain what and why (instead of how)
 
+Change log
+==========
+0.0.1 (2023-08-17)
+------------------
+This is the initial version.
+
 Acknowledgments
 ===============
 The model has been downloaded from TensorFlow Hub: https://tfhub.dev/google/movenet/multipose/lightning/1
