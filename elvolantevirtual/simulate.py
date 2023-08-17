@@ -73,6 +73,8 @@ def main(prog: str) -> int:
         },
     ]
 
+    blast_key_by_player = ["ctrl", "f"]
+
     print("Loading the detector...")
 
     # noinspection SpellCheckingInspection
@@ -111,6 +113,7 @@ def main(prog: str) -> int:
         engine = elvolantevirtual.main.Engine(
             pointer_to_key_by_player=pointer_to_key_by_player,
             wheel_to_key_by_player=wheel_to_key_by_player,
+            blast_key_by_player=blast_key_by_player,
             detector=detector,
             keyboard_control=KeyboardControl(),
             single_player=single_player,

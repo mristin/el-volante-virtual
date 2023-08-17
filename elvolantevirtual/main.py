@@ -54,6 +54,14 @@ class Wheel(enum.Enum):
     NOT_DETECTED = "not_detected"
 
 
+class Blast(enum.Enum):
+    """Represent a blasting motion, when the hands are wide apart."""
+
+    BLASTING = "blasting"
+    IDLE = "idle"
+    NOT_DETECTED = "not_detected"
+
+
 class PointXY:
     """Represent a 2D point."""
 
@@ -291,6 +299,47 @@ def determine_wheel_direction(detection: bodypose.Detection) -> Wheel:
     return result
 
 
+def determine_blast(detection: bodypose.Detection) -> Blast:
+    """
+    Try to infer whether the player is blasting or not.
+
+    Return :py:attr:`Blast.NOT_DETECTED` if the relevant keypoints are missing.
+    """
+    left_wrist = detection.keypoints.get(bodypose.KeypointLabel.LEFT_WRIST, None)
+    right_wrist = detection.keypoints.get(bodypose.KeypointLabel.RIGHT_WRIST, None)
+
+    left_shoulder = detection.keypoints.get(bodypose.KeypointLabel.LEFT_SHOULDER, None)
+    right_shoulder = detection.keypoints.get(
+        bodypose.KeypointLabel.RIGHT_SHOULDER, None
+    )
+
+    if (
+        left_wrist is None
+        or right_wrist is None
+        or left_shoulder is None
+        or right_shoulder is None
+    ):
+        return Blast.NOT_DETECTED
+
+    shoulder_width = abs(right_shoulder.x - left_shoulder.x)
+
+    xmin = min(left_wrist.x, right_wrist.x)
+    xmax = max(left_wrist.x, right_wrist.x)
+
+    ymin = min(left_wrist.y, right_wrist.y)
+    ymax = max(left_wrist.y, right_wrist.y)
+
+    half_width = (xmax - xmin) / 2.0
+    half_height = (ymax - ymin) / 2.0
+
+    radius = math.sqrt(half_width**2 + half_height**2)
+
+    if radius > 0.8 * shoulder_width:
+        return Blast.BLASTING
+    else:
+        return Blast.IDLE
+
+
 def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
     """
     Draw the pointer state of the player and give feedback.
@@ -420,6 +469,7 @@ COLOR_BY_POINTER = {
 def _draw_wheel_state(
     detection: bodypose.Detection,
     pointer: Pointer,
+    blast: Blast,
     canvas: cv2.Mat,
 ) -> None:
     """
@@ -483,12 +533,16 @@ def _draw_wheel_state(
 
     radius = math.sqrt(half_width**2 + half_height**2)
 
+    thickness = 10
+    if blast is Blast.BLASTING:
+        thickness = 40
+
     cv2.circle(
         canvas,
         (round(center_x), round(center_y)),
         round(radius),
         COLOR_BY_POINTER[pointer],
-        10,
+        thickness,
         cv2.LINE_AA,
     )
 
@@ -553,11 +607,12 @@ def _draw_wheel_state(
 def draw_player_state(
     detection: bodypose.Detection,
     pointer: Pointer,
+    blast: Blast,
     canvas: cv2.Mat,
 ) -> None:
     """Draw the state of the player to give him/her feedback."""
     _draw_pointer_state(detection=detection, canvas=canvas)
-    _draw_wheel_state(detection=detection, pointer=pointer, canvas=canvas)
+    _draw_wheel_state(detection=detection, pointer=pointer, blast=blast, canvas=canvas)
 
 
 def _draw_active_keys(canvas: cv2.Mat, active_keys: Set[str]) -> None:
@@ -707,6 +762,7 @@ class Engine:
         self,
         pointer_to_key_by_player: Sequence[Mapping[Pointer, str]],
         wheel_to_key_by_player: Sequence[Mapping[Wheel, str]],
+        blast_key_by_player: Sequence[str],
         detector: bodypose.Detector,
         keyboard_control: Keyboard,
         single_player: bool,
@@ -714,6 +770,7 @@ class Engine:
         """Initialize with the given values."""
         self.pointer_to_key_by_player = pointer_to_key_by_player
         self.wheel_to_key_by_player = wheel_to_key_by_player
+        self.blast_key_by_player = blast_key_by_player
         self.detector = detector
         self.keyboard = keyboard_control
         self.single_player = single_player
@@ -758,16 +815,16 @@ class Engine:
             if detection is None:
                 pointer_position = Pointer.NOT_DETECTED
                 wheel_direction = Wheel.NOT_DETECTED
+                blast = Blast.NOT_DETECTED
             else:
                 pointer_position = determine_pointer_position(detection)
                 wheel_direction = determine_wheel_direction(detection)
+                blast = determine_blast(detection)
 
             # region Handle keyboard for the pointer
-
             pointer_key = self.pointer_to_key_by_player[player_id][pointer_position]
             if pointer_key != "":
                 self.activations_by_key[pointer_key] += 1
-
             # endregion
 
             # region Handle keyboard for the wheel
@@ -776,9 +833,19 @@ class Engine:
                 self.activations_by_key[wheel_key] += 1
             # endregion
 
+            # region Handle keyboard for the blast
+            if blast is Blast.BLASTING:
+                blast_key = self.blast_key_by_player[player_id]
+                if blast_key != "":
+                    self.activations_by_key[blast_key] += 1
+            # endregion
+
             if detection is not None:
                 draw_player_state(
-                    detection=detection, pointer=pointer_position, canvas=frame
+                    detection=detection,
+                    pointer=pointer_position,
+                    blast=blast,
+                    canvas=frame,
                 )
 
         released_key_set = set()  # type: Set[str]
@@ -828,12 +895,14 @@ def validate_keys(args: argparse.Namespace) -> Optional[List[str]]:
         (args.key_for_player1_left, "--key_for_player1_left"),
         (args.key_for_player1_neutral, "--key_for_player1_neutral"),
         (args.key_for_player1_right, "--key_for_player1_right"),
+        (args.key_for_player1_blast, "--key_for_player1_blast"),
         (args.key_for_player2_high, "--key_for_player2_high"),
         (args.key_for_player2_mid, "--key_for_player2_mid"),
         (args.key_for_player2_low, "--key_for_player2_low"),
         (args.key_for_player2_left, "--key_for_player2_left"),
         (args.key_for_player2_neutral, "--key_for_player2_neutral"),
         (args.key_for_player2_right, "--key_for_player2_right"),
+        (args.key_for_player2_blast, "--key_for_player2_blast"),
     ]
 
     for key, arg in keys_args:
@@ -904,6 +973,11 @@ def main(prog: str) -> int:
         default="right",
     )
     parser.add_argument(
+        "--key_for_player1_blast",
+        help="Map blast to the key (empty means no key)",
+        default="ctrl",
+    )
+    parser.add_argument(
         "--key_for_player2_high",
         help="Map high pointer position to the key (empty means no key)",
         default="w",
@@ -932,6 +1006,11 @@ def main(prog: str) -> int:
         "--key_for_player2_right",
         help="Map right wheel direction to the key (empty means no key)",
         default="d",
+    )
+    parser.add_argument(
+        "--key_for_player2_blast",
+        help="Map blast to the key (empty means no key)",
+        default="f",
     )
     parser.add_argument(
         "--single_player",
@@ -989,6 +1068,11 @@ def main(prog: str) -> int:
         },
     ]
 
+    blast_key_by_player = [
+        args.key_for_player1_blast,
+        args.key_for_player2_blast,
+    ]
+
     single_player = bool(args.single_player)
 
     print("Loading the detector...")
@@ -1027,6 +1111,7 @@ def main(prog: str) -> int:
         engine = Engine(
             pointer_to_key_by_player=pointer_to_key_by_player,
             wheel_to_key_by_player=wheel_to_key_by_player,
+            blast_key_by_player=blast_key_by_player,
             detector=detector,
             keyboard_control=KeyboardControl(),
             single_player=single_player,

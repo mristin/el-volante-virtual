@@ -18,10 +18,12 @@ Accelerate or slow down by positioning your arms higher or lower, respectively.
 
 Tilt your hands to the left or right for the direction.
 
+To go into blasting mode (*e.g.*, shooting in an asteroid game), move your hands apart.
+
 The program will issue the corresponding key presses.
 It takes some time to get used to it, though!
 Usual games expect immediate keyboard presses and releases -- so you have to emulate that with your hands.
-It is thus better to make your hands only abruptly and not too much to the extremes.
+It is thus better to move your hands only abruptly and not too much to the extremes.
 
 Installation on Windows
 =======================
@@ -84,12 +86,14 @@ Run the application:
                               [--key_for_player1_left KEY_FOR_PLAYER1_LEFT]
                               [--key_for_player1_neutral KEY_FOR_PLAYER1_NEUTRAL]
                               [--key_for_player1_right KEY_FOR_PLAYER1_RIGHT]
+                              [--key_for_player1_blast KEY_FOR_PLAYER1_BLAST]
                               [--key_for_player2_high KEY_FOR_PLAYER2_HIGH]
                               [--key_for_player2_mid KEY_FOR_PLAYER2_MID]
                               [--key_for_player2_low KEY_FOR_PLAYER2_LOW]
                               [--key_for_player2_left KEY_FOR_PLAYER2_LEFT]
                               [--key_for_player2_neutral KEY_FOR_PLAYER2_NEUTRAL]
                               [--key_for_player2_right KEY_FOR_PLAYER2_RIGHT]
+                              [--key_for_player2_blast KEY_FOR_PLAYER2_BLAST]
                               [--single_player]
 
     Be a racing gamepad with the webcam and your arms.
@@ -121,6 +125,8 @@ Run the application:
       --key_for_player1_right KEY_FOR_PLAYER1_RIGHT
                             Map right wheel direction to the key (empty means no
                             key)
+      --key_for_player1_blast KEY_FOR_PLAYER1_BLAST
+                            Map blast to the key (empty means no key)
       --key_for_player2_high KEY_FOR_PLAYER2_HIGH
                             Map high pointer position to the key (empty means no
                             key)
@@ -139,6 +145,8 @@ Run the application:
       --key_for_player2_right KEY_FOR_PLAYER2_RIGHT
                             Map right wheel direction to the key (empty means no
                             key)
+      --key_for_player2_blast KEY_FOR_PLAYER2_BLAST
+                            Map blast to the key (empty means no key)
       --single_player       If set, handles only a single player instead of the
                             two players
 
