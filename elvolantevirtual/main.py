@@ -333,12 +333,14 @@ def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         first_third = nose.y + range_of_movement * 0.33333
         second_third = nose.y + range_of_movement * 0.66666
 
+        bar_width = 30
+
         # Accelerate
         cv2.rectangle(
             canvas,
             (round(bar_x * width), round(nose.y * height)),
-            (round(bar_x * width + 5), round(first_third * height)),
-            (55, 201, 45),
+            (round(bar_x * width + bar_width), round(first_third * height)),
+            COLOR_BY_POINTER[Pointer.HIGH],
             -1,
         )
 
@@ -346,8 +348,8 @@ def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         cv2.rectangle(
             canvas,
             (round(bar_x * width), round(first_third * height)),
-            (round(bar_x * width + 5), round(second_third * height)),
-            (22, 180, 231),
+            (round(bar_x * width + bar_width), round(second_third * height)),
+            COLOR_BY_POINTER[Pointer.MID],
             -1,
         )
 
@@ -355,8 +357,8 @@ def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         cv2.rectangle(
             canvas,
             (round(bar_x * width), round(second_third * height)),
-            (round(bar_x * width + 5), round(hip_avg_y * height)),
-            (50, 50, 204),
+            (round(bar_x * width + bar_width), round(hip_avg_y * height)),
+            COLOR_BY_POINTER[Pointer.LOW],
             -1,
         )
 
@@ -364,7 +366,7 @@ def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         cv2.rectangle(
             canvas,
             (round(bar_x * width), round(nose.y * height)),
-            (round(bar_x * width + 5), round(hip_avg_y * height)),
+            (round(bar_x * width + bar_width), round(hip_avg_y * height)),
             (255, 255, 255),
             1,
         )
@@ -373,9 +375,9 @@ def _draw_pointer_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         cv2.line(
             canvas,
             (round(bar_x * width), round(pointer * height)),
-            (round(bar_x * width + 5), round(pointer * height)),
+            (round(bar_x * width + bar_width), round(pointer * height)),
             (255, 255, 255),
-            3,
+            5,
         )
 
 
@@ -407,7 +409,19 @@ def put_text_center(
     )
 
 
-def _draw_wheel_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
+COLOR_BY_POINTER = {
+    Pointer.HIGH: (55, 201, 45),
+    Pointer.MID: (22, 180, 231),
+    Pointer.LOW: (50, 50, 204),
+    Pointer.NOT_DETECTED: (0, 0, 0),
+}
+
+
+def _draw_wheel_state(
+    detection: bodypose.Detection,
+    pointer: Pointer,
+    canvas: cv2.Mat,
+) -> None:
     """
     Draw the wheel state of the player and give feedback.
 
@@ -473,8 +487,8 @@ def _draw_wheel_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         canvas,
         (round(center_x), round(center_y)),
         round(radius),
-        (255, 255, 255),
-        2,
+        COLOR_BY_POINTER[pointer],
+        10,
         cv2.LINE_AA,
     )
 
@@ -536,10 +550,14 @@ def _draw_wheel_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
         )
 
 
-def draw_player_state(detection: bodypose.Detection, canvas: cv2.Mat) -> None:
+def draw_player_state(
+    detection: bodypose.Detection,
+    pointer: Pointer,
+    canvas: cv2.Mat,
+) -> None:
     """Draw the state of the player to give him/her feedback."""
     _draw_pointer_state(detection=detection, canvas=canvas)
-    _draw_wheel_state(detection=detection, canvas=canvas)
+    _draw_wheel_state(detection=detection, pointer=pointer, canvas=canvas)
 
 
 def _draw_active_keys(canvas: cv2.Mat, active_keys: Set[str]) -> None:
@@ -759,7 +777,9 @@ class Engine:
             # endregion
 
             if detection is not None:
-                draw_player_state(detection=detection, canvas=frame)
+                draw_player_state(
+                    detection=detection, pointer=pointer_position, canvas=frame
+                )
 
         released_key_set = set()  # type: Set[str]
         for key, activation in self.activations_by_key.items():
