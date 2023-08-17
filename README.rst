@@ -131,3 +131,17 @@ Run the application:
                             two players
 
 .. Help ends: python3 elvolantevirtual/main.py --help
+
+Run as server / in headless mode?
+=================================
+We had games in mind which use keyboard as their main input when we developed this application.
+As we could not find an easy way to emulate joystick, we only stick to the keyboard.
+The keyboard is but a crude input method: it allows only for key presses and key releases.
+If you are developing a more sophisticated game, you probably want to use continuous values (such as wheel angle) for better control.
+El-volante-virtual would need to provide you with some kind of an interface (HTTP server? Websocket server? STDIN/STDOUT?).
+
+At the moment, we lack the time to develop multiple interfaces which might end up unused in the end.
+However, if you do consider using el-volante-virtual as the input method for your game, please let us know by `creating an issue`_ how you would prefer to interface with it.
+We will be happy to develop the interface for you!
+
+.. _creating an issue: https://github.com/mristin/el-volante-virtual/issues/new
