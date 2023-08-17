@@ -6,6 +6,9 @@ Be a racing gamepad with the webcam and your arms.
 
 **Dedicated to my friend, Sascha, for his 40th birthday.**
 
+.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screencast-single-player.gif
+    :alt: Micro Machines single player
+
 How to Steer
 ============
 Accelerate or slow down by positioning your arms higher or lower, respectively.
