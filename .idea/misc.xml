@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="enabledOnReformat" value="true" />
+    <option name="sdkUUID" value="270a5f09-58c3-4bb7-af21-1a04081fa43c" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (one-leg-gamepad)" project-jdk-type="Python SDK" />
+</project>
