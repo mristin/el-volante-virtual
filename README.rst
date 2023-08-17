@@ -54,6 +54,12 @@ Activate the virtual environment:
 
     source venv/bin/activate
 
+Install the dependencies:
+
+.. code-block::
+
+    pip3 install -e .
+
 Run the application:
 
 .. code-block::
@@ -145,3 +151,80 @@ However, if you do consider using el-volante-virtual as the input method for you
 We will be happy to develop the interface for you!
 
 .. _creating an issue: https://github.com/mristin/el-volante-virtual/issues/new
+
+Contributing
+============
+If you want to report bugs and/or request features, please `create an issue`_.
+
+.. _create an issue: https://github.com/mristin/el-volante-virtual/issues/new
+
+Code contributions are also welcome!
+Before you develop a feature, please also `create an issue`_ to synchronize with the maintainers.
+It might be that they are already working on the same or a similar feature.
+
+We follow the pretty standard `fork & pull development model`_.
+Please see the link for more information.
+
+.. _fork & pull development model: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models#fork-and-pull-model
+
+Development environment
+-----------------------
+Clone the repository:
+
+.. code-block::
+
+    https://github.com/mristin/el-volante-virtual.git
+
+Change to it:
+
+.. code-block::
+
+    cd el-volante-virtual
+
+Create a virtual environment:
+
+.. code-block::
+
+    python3 -m venv venv
+
+Activate the virtual environment:
+
+.. code-block::
+
+    source venv/bin/activate
+
+Install the dependencies (including the development dependencies):
+
+.. code-block::
+
+    pip3 install -e .[dev]
+
+Make your changes.
+
+Run the pre-commit script:
+
+.. code-block::
+
+    python3 continuous_integration/precommit.py
+
+If you want the pre-commit script to automatically fix some of the issues, call it with ``--overwrite``:
+
+.. code-block::
+
+    python3 continuous_integration/precommit.py -- overwrite
+
+Commit messages
+---------------
+The commit messages follow the guidelines from from https://chris.beams.io/posts/git-commit:
+
+* Separate subject from body with a blank line
+* Limit the subject line to 50 characters
+* Capitalize the subject line
+* Do not end the subject line with a period
+* Use the imperative mood in the subject line
+* Wrap the body at 72 characters
+* Use the body to explain what and why (instead of how)
+
+Acknowledgments
+===============
+The model has been downloaded from TensorFlow Hub: https://tfhub.dev/google/movenet/multipose/lightning/1
