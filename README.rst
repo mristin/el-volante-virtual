@@ -6,11 +6,11 @@ Be a racing gamepad with the webcam and your arms.
 
 **Dedicated to my friend, Sascha, for his 40th birthday.**
 
-.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-single-player-1.png
-    :alt: Micro Machines single player (first screenshot)
+.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-single-player.png
+    :alt: Micro Machines single player 
 
-.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-single-player-2.png
-    :alt: Micro Machines single player (second screenshot)
+.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-two-players.png
+    :alt: Dyna Blaster two players
 
 How to Steer
 ============
