@@ -1095,6 +1095,8 @@ def main(prog: str) -> int:
 
     try:
         cv2.namedWindow("el-volante-virtual", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("el-volante-virtual", 640, 800)
+        cv2.moveWindow("el-volante-virtual", 0, 0)
 
         class KeyboardControl(Keyboard):
             """Implement a keyboard control with :py:mod:`pyinput`."""
