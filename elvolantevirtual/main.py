@@ -927,7 +927,11 @@ def main(prog: str) -> int:
     :param prog: name of the program to be displayed in the help
     :return: exit code
     """
-    parser = argparse.ArgumentParser(prog=prog, description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog=prog,
+        description=__doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument(
         "--version", help="show the current version and exit", action="store_true"
     )
