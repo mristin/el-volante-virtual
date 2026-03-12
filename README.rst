@@ -11,6 +11,9 @@ Be a racing gamepad with the webcam and your arms.
 
 .. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-two-players.png
     :alt: Dyna Blaster two players
+   
+.. image:: https://media.githubusercontent.com/media/mristin/el-volante-virtual/main/screenshot-doom.png
+    :alt: Doom
 
 How to Steer
 ============
